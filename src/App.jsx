@@ -442,10 +442,45 @@ export default function App() {
                   )}
                 </div>
               </>
+
+              
             )}
+            
 
           </div>
         )}
+
+        {/* Footer */}
+        <div style={{
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          marginTop: 60, padding: "32px 0 16px",
+          textAlign: "center",
+        }}>
+          <p style={{ fontSize: 13, color: "#2e3a52", marginBottom: 16, letterSpacing: "0.02em" }}>
+            Built with passion by <span style={{ color: "#63b3ed" }}>Sachin Prajapati</span>
+          </p>
+          <div style={{ display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", marginBottom: 24 }}>
+            {[
+              { label: "LinkedIn", href: "https://www.linkedin.com/in/sachiin-prajapatii" },
+              { label: "GitHub", href: "https://github.com/sachiinprajapatii1" },
+              { label: "Instagram", href: "https://www.instagram.com/sachiinprajapatii/" },
+            ].map((link) => (
+              <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
+                style={{
+                  color: "#3a4a66", fontSize: 13, textDecoration: "none",
+                  letterSpacing: "0.05em", transition: "color 0.15s",
+                }}
+                onMouseEnter={e => e.target.style.color = "#63b3ed"}
+                onMouseLeave={e => e.target.style.color = "#3a4a66"}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+          <p style={{ fontSize: 11, color: "#1e2a40", letterSpacing: "0.04em" }}>
+            © 2026 Sachin Prajapati · All rights reserved
+          </p>
+        </div>
       </div>
     </div>
   );
