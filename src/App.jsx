@@ -73,6 +73,10 @@ export default function App() {
 
   const handleFetch = async () => {
     if (!url.trim()) return setError("Please paste a valid URL");
+    // YouTube check
+  if (url.includes("youtube.com") || url.includes("youtu.be")) {
+    return setError("YouTube downloads are currently unavailable due to platform restrictions. Try Instagram or other platforms.");
+  }
     try {
       setLoading(true); setData(null); setError("");
       setActiveFormat(null); setPasteHint(false);
