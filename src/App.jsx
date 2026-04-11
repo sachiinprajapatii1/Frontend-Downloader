@@ -1,9 +1,7 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/download";
-
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-
+const BASE_URL = "http://localhost:5000/api/download";
 
 const GlowOrb = ({ style }) => (
   <div style={{
@@ -358,7 +356,7 @@ export default function App() {
 
             {/* Thumbnail + meta */}
             <div style={S.cardTop}>
-              <img src={data.thumbnail} alt="" style={S.thumb} />
+              <img src={data.thumbnail} alt="" style={S.thumb} onError={(e) => { e.target.src = "https://placehold.co/140x90/1a2540/6b7a99?text=No+Preview"; }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={S.metaTitle} title={data.title}>
                   {data.title.length > 80 ? data.title.slice(0, 80) + "…" : data.title}
@@ -444,49 +442,7 @@ export default function App() {
 
           </div>
         )}
-
-        {/* Footer */}
-<div style={{
-  borderTop: "1px solid rgba(255,255,255,0.08)",
-  padding: "24px 0",
-  textAlign: "center",
-  marginTop: "40px",
-  color: "#6b7a99",
-  fontSize: "14px"
-}}>
-  <p style={{ marginBottom: "10px" }}>© 2026 Sachin Prajapati</p>
-
-  <div style={{
-    display: "flex",
-    justifyContent: "center",
-    gap: "20px",
-    flexWrap: "wrap"
-  }}>
-    <a href="https://www.linkedin.com/in/sachiin-prajapatii"
-       target="_blank"
-       rel="noopener noreferrer"
-       style={{ color: "#63b3ed", textDecoration: "none" }}>
-      LinkedIn
-    </a>
-
-    <a href="https://github.com/sachiinprajapatii1"
-       target="_blank"
-       rel="noopener noreferrer"
-       style={{ color: "#63b3ed", textDecoration: "none" }}>
-      GitHub
-    </a>
-
-    <a href="https://www.instagram.com/sachiinprajapatii/"
-       target="_blank"
-       rel="noopener noreferrer"
-       style={{ color: "#63b3ed", textDecoration: "none" }}>
-      Instagram
-    </a>
-  </div>
-</div>
-      
       </div>
-      
     </div>
   );
 }
