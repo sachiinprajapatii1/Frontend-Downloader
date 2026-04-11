@@ -269,12 +269,15 @@ export default function App() {
 
         {error && <div style={S.error}>⚠ {error}</div>}
 
-        {loading && (
-          <div style={S.loadingWrap} className="fade-up">
-            <div style={S.loadingSpinner} />
-            <p style={{ marginTop: 16, fontSize: 14 }}>Fetching media info...</p>
-          </div>
-        )}
+       {loading && (
+  <div style={S.loadingWrap} className="fade-up">
+    <div style={S.loadingSpinner} />
+    <p style={{ marginTop: 16, fontSize: 14 }}>Fetching media info...</p>
+    <p style={{ marginTop: 8, fontSize: 12, color: "#3a4460" }}>
+      Instagram may take 20-30 seconds — please wait ⏳
+    </p>
+  </div>
+)}
 
         {data && (
           <div style={S.card} className="fade-up">
