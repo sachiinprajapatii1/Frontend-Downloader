@@ -56,7 +56,6 @@ export default function App() {
   const [error, setError] = useState("");
   const [activeFormat, setActiveFormat] = useState(null);
   const [pasteHint, setPasteHint] = useState(false);
-  // Carousel state
   const [carouselItems, setCarouselItems] = useState([]);
   const [carouselLoading, setCarouselLoading] = useState(false);
   const [sessionId, setSessionId] = useState(null);
@@ -92,11 +91,7 @@ export default function App() {
       setData(res.data);
       setVideoTitle(res.data.title || "");
       setCleanUrl(res.data.cleanUrl || url.trim());
-
-      // Carousel auto-fetch
-      if (res.data.isCarousel) {
-        fetchCarouselItems(res.data.cleanUrl || url.trim());
-      }
+      if (res.data.isCarousel) fetchCarouselItems(res.data.cleanUrl || url.trim());
     } catch (err) {
       setError(err.response?.data?.error || "Failed to fetch media. Check the URL.");
     } finally { setLoading(false); }
@@ -108,9 +103,8 @@ export default function App() {
       const res = await axios.get(`${BASE_URL}/carousel`, { params: { url: carouselUrl }, timeout: 2 * 60 * 1000 });
       setCarouselItems(res.data.items || []);
       setSessionId(res.data.sessionId);
-    } catch (err) {
-      setError("Failed to load carousel items.");
-    } finally { setCarouselLoading(false); }
+    } catch { setError("Failed to load carousel items."); }
+    finally { setCarouselLoading(false); }
   };
 
   const handleCarouselItemDownload = async (item) => {
@@ -118,10 +112,8 @@ export default function App() {
     try {
       const response = await axios.get(`${BASE_URL}/carousel-item`, {
         params: { sessionId, filename: item.filename },
-        responseType: "blob",
-        timeout: 5 * 60 * 1000,
+        responseType: "blob", timeout: 5 * 60 * 1000,
       });
-      const ext = item.filename.split(".").pop();
       const blob = new Blob([response.data]);
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
@@ -129,9 +121,8 @@ export default function App() {
       document.body.appendChild(link); link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(link.href);
-    } catch (err) {
-      setError("Failed to download item.");
-    } finally { setDownloadingItem(null); }
+    } catch { setError("Failed to download item."); }
+    finally { setDownloadingItem(null); }
   };
 
   const handleVideoDownload = async (format_id, qualityLabel) => {
@@ -139,8 +130,7 @@ export default function App() {
       setDownloading(true); setActiveFormat(format_id);
       setDownloadType(qualityLabel); setProgress(0); setError("");
       const response = await axios.get(`${BASE_URL}/video`, {
-        params: { url: cleanUrl, format_id },
-        responseType: "blob",
+        params: { url: cleanUrl, format_id }, responseType: "blob",
         onDownloadProgress: (e) => { if (e.total) setProgress(Math.round((e.loaded * 100) / e.total)); },
         timeout: 15 * 60 * 1000,
       });
@@ -158,8 +148,7 @@ export default function App() {
       setDownloading(true); setActiveFormat("audio");
       setDownloadType("MP3 Audio"); setProgress(0); setError("");
       const response = await axios.get(`${BASE_URL}/audio`, {
-        params: { url: cleanUrl },
-        responseType: "blob",
+        params: { url: cleanUrl }, responseType: "blob",
         onDownloadProgress: (e) => { if (e.total) setProgress(Math.round((e.loaded * 100) / e.total)); },
         timeout: 15 * 60 * 1000,
       });
@@ -216,10 +205,8 @@ export default function App() {
     spinnerGreen: { width: 16, height: 16, border: "2px solid rgba(52,211,153,0.2)", borderTopColor: "#34d399", borderRadius: "50%", animation: "spin 0.8s linear infinite", display: "inline-block" },
     loadingWrap: { textAlign: "center", padding: "48px 0", color: "#4a5878" },
     loadingSpinner: { width: 28, height: 28, border: "2px solid rgba(99,179,237,0.15)", borderTopColor: "#63b3ed", borderRadius: "50%", animation: "spin 0.8s linear infinite", display: "inline-block" },
-    // Carousel styles
-    carouselGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12, marginTop: 8 },
-    carouselItem: { borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", position: "relative" },
-    carouselThumb: { width: "100%", aspectRatio: "1", objectFit: "cover", display: "block" },
+    carouselGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 12, marginTop: 8 },
+    carouselItem: { borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)" },
     carouselDlBtn: (active) => ({ width: "100%", padding: "8px", fontSize: 12, fontWeight: 600, border: "none", background: active ? "rgba(99,179,237,0.3)" : "rgba(99,179,237,0.15)", color: "#63b3ed", cursor: active ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "all 0.15s" }),
   };
 
@@ -307,39 +294,43 @@ export default function App() {
               </div>
             </div>
 
-            {/* CAROUSEL SECTION */}
+            {/* CAROUSEL */}
             {isCarousel && (
               <div style={S.section}>
                 <div style={S.sectionLabel}>
-                  {carouselLoading ? "Loading carousel items..." : `Carousel Items (${carouselItems.length})`}
+                  {carouselLoading ? "Loading items..." : `Carousel Items (${carouselItems.length})`}
                 </div>
                 {carouselLoading && (
                   <div style={{ textAlign: "center", padding: "24px 0" }}>
                     <div style={S.loadingSpinner} />
-                    <p style={{ marginTop: 12, fontSize: 13, color: "#4a5878" }}>Fetching all items via gallery-dl...</p>
+                    <p style={{ marginTop: 12, fontSize: 13, color: "#4a5878" }}>Fetching via gallery-dl...</p>
                   </div>
                 )}
                 {!carouselLoading && carouselItems.length > 0 && (
                   <div style={S.carouselGrid}>
                     {carouselItems.map((item, i) => {
                       const isActive = downloadingItem === item.filename;
+                      const thumbUrl = `${BASE_URL}/carousel-thumb?sessionId=${sessionId}&filename=${encodeURIComponent(item.filename)}`;
                       return (
                         <div key={i} style={S.carouselItem}>
-                          {item.type === "photo" ? (
-                            <div style={{ width: "100%", aspectRatio: "1", background: "rgba(99,179,237,0.05)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>🖼</div>
-                          ) : (
-                            <div style={{ width: "100%", aspectRatio: "1", background: "rgba(52,211,153,0.05)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>🎬</div>
-                          )}
+                          {/* Real thumbnail */}
+                          <div style={{ width: "100%", aspectRatio: "1", overflow: "hidden", position: "relative" }}>
+                            <img
+                              src={item.type === "photo" ? thumbUrl : undefined}
+                              alt={`Item ${i + 1}`}
+                              style={{ width: "100%", height: "100%", objectFit: "cover", display: item.type === "photo" ? "block" : "none" }}
+                              onError={(e) => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }}
+                            />
+                            <div style={{ width: "100%", height: "100%", background: item.type === "photo" ? "rgba(99,179,237,0.05)" : "rgba(52,211,153,0.05)", display: item.type === "photo" ? "none" : "flex", alignItems: "center", justifyContent: "center", fontSize: 28, position: "absolute", top: 0, left: 0 }}>
+                              {item.type === "photo" ? "🖼" : "🎬"}
+                            </div>
+                          </div>
                           <div style={{ padding: "6px 8px", fontSize: 11, color: "#4a5878", textAlign: "center" }}>
                             {item.type === "photo" ? "Photo" : "Video"} {i + 1}
                             {item.size && <span style={{ marginLeft: 4 }}>· {formatBytes(item.size)}</span>}
                           </div>
-                          <button
-                            className="carousel-dl"
-                            style={S.carouselDlBtn(isActive)}
-                            onClick={() => !isActive && handleCarouselItemDownload(item)}
-                            disabled={isActive}
-                          >
+                          <button className="carousel-dl" style={S.carouselDlBtn(isActive)}
+                            onClick={() => !isActive && handleCarouselItemDownload(item)} disabled={isActive}>
                             {isActive ? <span style={S.spinnerBlue} /> : "↓"}
                             {isActive ? "Downloading..." : "Download"}
                           </button>
@@ -354,17 +345,16 @@ export default function App() {
               </div>
             )}
 
-            {/* NORMAL VIDEO / PHOTO SECTION */}
+            {/* VIDEO / PHOTO */}
             {!isCarousel && (
               <>
                 <div style={S.section}>
                   <div style={S.sectionLabel}>{isPhoto ? "Photo" : "Video Download"}</div>
-                  {isPhoto && (
-                    <div style={{ fontSize: 13, color: "#63b3ed", background: "rgba(99,179,237,0.06)", border: "1px solid rgba(99,179,237,0.15)", borderRadius: 10, padding: "10px 16px", marginBottom: 12 }}>
-                      ℹ Photo post — right-click the preview image above and select "Save Image As" to download it.
+                  {isPhoto ? (
+                    <div style={{ fontSize: 13, color: "#63b3ed", background: "rgba(99,179,237,0.06)", border: "1px solid rgba(99,179,237,0.15)", borderRadius: 10, padding: "10px 16px" }}>
+                      ℹ Photo post — right-click the preview image above and select "Save Image As".
                     </div>
-                  )}
-                  {!isPhoto && (
+                  ) : (
                     <div style={S.formatGrid}>
                       {data.formats.map((f, i) => {
                         const isActive = activeFormat === f.format_id;
@@ -381,7 +371,6 @@ export default function App() {
                     </div>
                   )}
                 </div>
-
                 {!isPhoto && (
                   <>
                     <div style={S.divider} />
@@ -416,11 +405,8 @@ export default function App() {
           </div>
         )}
 
-        {/* Footer */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 60, padding: "32px 0 16px", textAlign: "center" }}>
-          <p style={{ fontSize: 13, color: "#2e3a52", marginBottom: 16 }}>
-            Built with passion by <span style={{ color: "#63b3ed" }}>Sachin Prajapati</span>
-          </p>
+          <p style={{ fontSize: 13, color: "#2e3a52", marginBottom: 16 }}>Built with passion by <span style={{ color: "#63b3ed" }}>Sachin Prajapati</span></p>
           <div style={{ display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", marginBottom: 24 }}>
             {[
               { label: "LinkedIn", href: "https://www.linkedin.com/in/sachiin-prajapatii" },
