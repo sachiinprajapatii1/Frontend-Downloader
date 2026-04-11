@@ -9,6 +9,7 @@ const GlowOrb = ({ style }) => (
 
 function formatDuration(s) {
   if (!s) return "";
+  s = Math.floor(s);
   const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
   return h > 0 ? `${h}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}` : `${m}:${String(sec).padStart(2,"0")}`;
 }
@@ -343,8 +344,11 @@ export default function App() {
                   </div>
                 )}
                 {!carouselLoading && carouselItems.length === 0 && (
-                  <p style={{ fontSize: 13, color: "#4a5878" }}>No items found. Make sure Instagram cookies are set.</p>
-                )}
+  <div style={{ fontSize: 13, color: "#f87171", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: 10, padding: "12px 16px" }}>
+    ⚠ Carousel & Story downloads require a dedicated server. 
+    This feature works on local version only.
+  </div>
+)}
               </div>
             )}
 
