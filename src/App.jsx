@@ -34,7 +34,7 @@ function CookieConsent() {
       <div style={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: "20px 24px", maxWidth: 680, width: "100%", display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap" }}>
         <div style={{ flex: 1, minWidth: 240 }}>
           <p style={{ fontSize: 14, fontWeight: 600, color: "#f0f4ff", margin: "0 0 6px" }}>We use cookies</p>
-          <p style={{ fontSize: 13, color: "#6b7a99", margin: 0, lineHeight: 1.6 }}>We use cookies to personalize ads and improve your experience.</p>
+          <p style={{ fontSize: 13, color: "#6b7a99", margin: 0, lineHeight: 1.6 }}>We use cookies to personalize ads and improve your experience. By clicking Accept, you consent to our use of cookies.</p>
         </div>
         <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
           <button onClick={() => { localStorage.setItem("cookieConsent", "declined"); setVisible(false); }} style={{ padding: "9px 18px", fontSize: 13, borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "#6b7a99", cursor: "pointer" }}>Decline</button>
@@ -61,6 +61,7 @@ export default function App() {
   const [carouselLoading, setCarouselLoading] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const [downloadingItem, setDownloadingItem] = useState(null);
+  const [openFaq, setOpenFaq] = useState(null);
   const inputRef = useRef(null);
 
   useEffect(() => { inputRef.current?.focus(); }, []);
@@ -209,7 +210,40 @@ export default function App() {
     carouselGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 12, marginTop: 8 },
     carouselItem: { borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)" },
     carouselDlBtn: (active) => ({ width: "100%", padding: "8px", fontSize: 12, fontWeight: 600, border: "none", background: active ? "rgba(99,179,237,0.3)" : "rgba(99,179,237,0.15)", color: "#63b3ed", cursor: active ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "all 0.15s" }),
+    sectionTitle: { fontSize: 24, fontWeight: 700, color: "#eef2ff", marginBottom: 8, letterSpacing: "-0.02em" },
+    sectionDesc: { fontSize: 15, color: "#6b7a99", marginBottom: 32, lineHeight: 1.7 },
+    infoCard: { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "24px" },
+    faqItem: { borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: 16, marginBottom: 16 },
   };
+
+  const features = [
+    { icon: "⚡", title: "Fast Downloads", desc: "High-speed downloads with no waiting time or queues." },
+    { icon: "🎬", title: "Multiple Qualities", desc: "Choose from 480p, 720p, 1080p, 2K, 4K and Original quality." },
+    { icon: "🎵", title: "Audio Extraction", desc: "Extract MP3 audio from any video at the best quality." },
+    { icon: "📱", title: "All Devices", desc: "Works perfectly on mobile, tablet and desktop browsers." },
+    { icon: "🔒", title: "No Registration", desc: "No sign up, no login. Just paste and download." },
+    { icon: "🆓", title: "100% Free", desc: "Completely free to use with no hidden charges." },
+  ];
+
+  const platforms = [
+    { name: "Instagram", types: "Reels, Videos, Posts", color: "#e1306c" },
+    { name: "Facebook", types: "Videos, Reels, Stories", color: "#1877f2" },
+    { name: "Twitter / X", types: "Videos, GIFs", color: "#1da1f2" },
+    { name: "Pinterest", types: "Videos, Slideshows", color: "#ff0000" },
+    { name: "Reddit", types: "Videos, GIFs", color: "#ff4500" },
+    { name: "Vimeo", types: "HD Videos", color: "#1ab7ea" },
+  ];
+
+  const faqs = [
+    { q: "Is this tool free to use?", a: "Yes, Universal Media Downloader is completely free. No registration, no subscription, no hidden charges." },
+    { q: "Which platforms are supported?", a: "We support Instagram, Facebook, Twitter/X, TikTok, Reddit, Vimeo and many more platforms. Simply paste the URL and we'll handle the rest." },
+    { q: "What video qualities are available?", a: "We offer 480p, 720p, 1080p, 2K, 4K and Original quality depending on what the source video provides." },
+    { q: "Can I download audio only?", a: "Yes! You can extract MP3 audio from any supported video using the 'Download MP3' button." },
+    { q: "Is it safe to use?", a: "Absolutely. We don't store any of your downloads or personal data. All files are processed and deleted from our servers immediately after download." },
+    { q: "Why is my download taking long?", a: "Download speed depends on the video size and your internet connection. Large HD videos may take a few seconds to process on our server." },
+    { q: "Do I need to install anything?", a: "No installation needed. Universal Media Downloader works directly in your browser on any device." },
+    { q: "Can I download private videos?", a: "We can only download publicly accessible videos. Private or restricted content cannot be downloaded." },
+  ];
 
   return (
     <div style={S.root}>
@@ -224,6 +258,7 @@ export default function App() {
         .audio-btn:hover:not(:disabled) { border-color: rgba(52,211,153,0.35) !important; background: rgba(52,211,153,0.08) !important; color: #6ee7b7 !important; }
         .paste-hint:hover { background: rgba(99,179,237,0.12) !important; }
         .carousel-dl:hover:not(:disabled) { background: rgba(99,179,237,0.25) !important; }
+        .faq-btn:hover { background: rgba(255,255,255,0.04) !important; }
         input::placeholder { color: #2e3a52; }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #1e2a40; border-radius: 99px; }
@@ -233,16 +268,19 @@ export default function App() {
       <GlowOrb style={{ width: 400, height: 400, background: "#0d3320", bottom: 0, left: -100 }} />
 
       <div style={S.wrap}>
+
+        {/* ── HERO ── */}
         <div style={S.badge}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#63b3ed", display: "inline-block" }} />
           Universal Media Downloader
         </div>
         <h1 style={S.h1}>Download anything.<br />Any quality.</h1>
-        <p style={S.sub}>Instagram, Facebook, Twitter & more.<br />Videos, photos, carousels — all supported.</p>
+        <p style={S.sub}>Instagram, Facebook, Twitter & more.<br />Videos, photos, carousels — all supported. Free forever.</p>
 
+        {/* ── INPUT ── */}
         <div style={S.inputWrap}>
           <span style={{ fontSize: 16, paddingTop: 1, flexShrink: 0, color: "#3a4a66" }}>🔗</span>
-          <input ref={inputRef} style={S.input} placeholder="Paste video/photo/carousel URL here..."
+          <input ref={inputRef} style={S.input} placeholder="Paste video URL here — Instagram, Facebook, Twitter..."
             value={url}
             onChange={(e) => { setUrl(e.target.value); setPasteHint(false); }}
             onFocus={handleInputFocus}
@@ -270,16 +308,15 @@ export default function App() {
 
         {error && <div style={S.error}>⚠ {error}</div>}
 
-       {loading && (
-  <div style={S.loadingWrap} className="fade-up">
-    <div style={S.loadingSpinner} />
-    <p style={{ marginTop: 16, fontSize: 14 }}>Fetching media info...</p>
-    <p style={{ marginTop: 8, fontSize: 12, color: "#3a4460" }}>
-      Instagram may take 20-30 seconds — please wait ⏳
-    </p>
-  </div>
-)}
+        {loading && (
+          <div style={S.loadingWrap} className="fade-up">
+            <div style={S.loadingSpinner} />
+            <p style={{ marginTop: 16, fontSize: 14 }}>Fetching media info...</p>
+            <p style={{ marginTop: 8, fontSize: 12, color: "#3a4460" }}>Instagram may take 20–30 seconds — please wait ⏳</p>
+          </div>
+        )}
 
+        {/* ── RESULT CARD ── */}
         {data && (
           <div style={S.card} className="fade-up">
             <div style={S.cardTop}>
@@ -298,12 +335,9 @@ export default function App() {
               </div>
             </div>
 
-            {/* CAROUSEL */}
             {isCarousel && (
               <div style={S.section}>
-                <div style={S.sectionLabel}>
-                  {carouselLoading ? "Loading items..." : `Carousel Items (${carouselItems.length})`}
-                </div>
+                <div style={S.sectionLabel}>{carouselLoading ? "Loading items..." : `Carousel Items (${carouselItems.length})`}</div>
                 {carouselLoading && (
                   <div style={{ textAlign: "center", padding: "24px 0" }}>
                     <div style={S.loadingSpinner} />
@@ -317,21 +351,16 @@ export default function App() {
                       const thumbUrl = `${BASE_URL}/carousel-thumb?sessionId=${sessionId}&filename=${encodeURIComponent(item.filename)}`;
                       return (
                         <div key={i} style={S.carouselItem}>
-                          {/* Real thumbnail */}
                           <div style={{ width: "100%", aspectRatio: "1", overflow: "hidden", position: "relative" }}>
-                            <img
-                              src={item.type === "photo" ? thumbUrl : undefined}
-                              alt={`Item ${i + 1}`}
+                            <img src={item.type === "photo" ? thumbUrl : undefined} alt={`Item ${i + 1}`}
                               style={{ width: "100%", height: "100%", objectFit: "cover", display: item.type === "photo" ? "block" : "none" }}
-                              onError={(e) => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }}
-                            />
-                            <div style={{ width: "100%", height: "100%", background: item.type === "photo" ? "rgba(99,179,237,0.05)" : "rgba(52,211,153,0.05)", display: item.type === "photo" ? "none" : "flex", alignItems: "center", justifyContent: "center", fontSize: 28, position: "absolute", top: 0, left: 0 }}>
+                              onError={(e) => { e.target.style.display = "none"; }} />
+                            <div style={{ width: "100%", height: "100%", background: item.type === "photo" ? "rgba(99,179,237,0.05)" : "rgba(52,211,153,0.05)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, position: "absolute", top: 0, left: 0 }}>
                               {item.type === "photo" ? "🖼" : "🎬"}
                             </div>
                           </div>
                           <div style={{ padding: "6px 8px", fontSize: 11, color: "#4a5878", textAlign: "center" }}>
-                            {item.type === "photo" ? "Photo" : "Video"} {i + 1}
-                            {item.size && <span style={{ marginLeft: 4 }}>· {formatBytes(item.size)}</span>}
+                            {item.type === "photo" ? "Photo" : "Video"} {i + 1}{item.size && <span style={{ marginLeft: 4 }}>· {formatBytes(item.size)}</span>}
                           </div>
                           <button className="carousel-dl" style={S.carouselDlBtn(isActive)}
                             onClick={() => !isActive && handleCarouselItemDownload(item)} disabled={isActive}>
@@ -344,15 +373,13 @@ export default function App() {
                   </div>
                 )}
                 {!carouselLoading && carouselItems.length === 0 && (
-  <div style={{ fontSize: 13, color: "#f87171", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: 10, padding: "12px 16px" }}>
-    ⚠ Carousel & Story downloads require a dedicated server. 
-    This feature works on local version only.
-  </div>
-)}
+                  <div style={{ fontSize: 13, color: "#f87171", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: 10, padding: "12px 16px" }}>
+                    ⚠ Carousel & Story downloads require a dedicated server. This feature works on local version only.
+                  </div>
+                )}
               </div>
             )}
 
-            {/* VIDEO / PHOTO */}
             {!isCarousel && (
               <>
                 <div style={S.section}>
@@ -412,7 +439,94 @@ export default function App() {
           </div>
         )}
 
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 60, padding: "32px 0 16px", textAlign: "center" }}>
+        {/* ── HOW TO USE ── */}
+        <div style={{ marginTop: 80 }}>
+          <div style={S.sectionTitle}>How to use</div>
+          <div style={S.sectionDesc}>Download any video in 3 simple steps — no account needed.</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+            {[
+              { n: "01", t: "Copy the URL", d: "Go to Instagram, Facebook, or Twitter. Open the video and copy its link from the share menu." },
+              { n: "02", t: "Paste & fetch", d: "Paste the URL in the input box above and click the Download button to fetch media info." },
+              { n: "03", t: "Choose & download", d: "Select your preferred video quality or download MP3 audio. The file saves directly to your device." },
+            ].map((s) => (
+              <div key={s.n} style={{ ...S.infoCard }}>
+                <div style={{ fontSize: 32, fontWeight: 700, color: "rgba(99,179,237,0.3)", marginBottom: 12, fontVariantNumeric: "tabular-nums" }}>{s.n}</div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: "#eef2ff", marginBottom: 8 }}>{s.t}</div>
+                <div style={{ fontSize: 13, color: "#6b7a99", lineHeight: 1.7 }}>{s.d}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── FEATURES ── */}
+        <div style={{ marginTop: 80 }}>
+          <div style={S.sectionTitle}>Why choose us?</div>
+          <div style={S.sectionDesc}>Everything you need to download media — fast, free, and hassle-free.</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+            {features.map((f) => (
+              <div key={f.title} style={{ ...S.infoCard }}>
+                <div style={{ fontSize: 28, marginBottom: 12 }}>{f.icon}</div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: "#eef2ff", marginBottom: 6 }}>{f.title}</div>
+                <div style={{ fontSize: 13, color: "#6b7a99", lineHeight: 1.7 }}>{f.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── SUPPORTED PLATFORMS ── */}
+        <div style={{ marginTop: 80 }}>
+          <div style={S.sectionTitle}>Supported platforms</div>
+          <div style={S.sectionDesc}>We support a wide range of social media and video platforms.</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+            {platforms.map((p) => (
+              <div key={p.name} style={{ ...S.infoCard, display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", background: p.color, flexShrink: 0 }} />
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "#eef2ff" }}>{p.name}</div>
+                  <div style={{ fontSize: 12, color: "#4a5878", marginTop: 2 }}>{p.types}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── FAQ ── */}
+        <div style={{ marginTop: 80 }}>
+          <div style={S.sectionTitle}>Frequently asked questions</div>
+          <div style={S.sectionDesc}>Got questions? We've got answers.</div>
+          <div>
+            {faqs.map((faq, i) => (
+              <div key={i} style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 4 }}>
+                <button className="faq-btn"
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  style={{ width: "100%", textAlign: "left", background: "transparent", border: "none", padding: "18px 4px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, borderRadius: 8 }}>
+                  <span style={{ fontSize: 15, fontWeight: 500, color: "#eef2ff" }}>{faq.q}</span>
+                  <span style={{ fontSize: 18, color: "#4a5878", flexShrink: 0, transform: openFaq === i ? "rotate(45deg)" : "none", transition: "transform 0.2s" }}>+</span>
+                </button>
+                {openFaq === i && (
+                  <div style={{ padding: "0 4px 18px", fontSize: 14, color: "#6b7a99", lineHeight: 1.8 }}>{faq.a}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── ABOUT ── */}
+        <div style={{ marginTop: 80, ...S.infoCard }}>
+          <div style={{ fontSize: 18, fontWeight: 600, color: "#eef2ff", marginBottom: 12 }}>About Universal Media Downloader</div>
+          <p style={{ fontSize: 14, color: "#6b7a99", lineHeight: 1.9, marginBottom: 12 }}>
+            Universal Media Downloader is a free online tool that lets you download videos, reels, photos and audio from popular social media platforms including Instagram, Facebook, Twitter/X, TikTok and more — directly to your device.
+          </p>
+          <p style={{ fontSize: 14, color: "#6b7a99", lineHeight: 1.9, marginBottom: 12 }}>
+            Our tool supports multiple video quality options from 480p all the way up to 4K, and lets you extract high-quality MP3 audio from any supported video. No registration, no software installation, and no hidden fees — ever.
+          </p>
+          <p style={{ fontSize: 14, color: "#6b7a99", lineHeight: 1.9 }}>
+            We respect your privacy. We do not store downloaded files or collect any personal data. All media is processed temporarily on our servers and deleted immediately after your download completes.
+          </p>
+        </div>
+
+        {/* ── FOOTER ── */}
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 80, padding: "32px 0 16px", textAlign: "center" }}>
           <p style={{ fontSize: 13, color: "#2e3a52", marginBottom: 16 }}>Built with passion by <span style={{ color: "#63b3ed" }}>Sachin Prajapati</span></p>
           <div style={{ display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", marginBottom: 24 }}>
             {[
@@ -428,7 +542,8 @@ export default function App() {
               </a>
             ))}
           </div>
-          <p style={{ fontSize: 11, color: "#1e2a40" }}>© 2026 Sachin Prajapati · All rights reserved</p>
+          <p style={{ fontSize: 11, color: "#1e2a40" }}>© 2026 Universal Media Downloader · Built by Sachin Prajapati · All rights reserved</p>
+          <p style={{ fontSize: 11, color: "#1e2a40", marginTop: 6 }}>This tool is for personal use only. Please respect copyright laws and platform terms of service.</p>
         </div>
       </div>
       <CookieConsent />
