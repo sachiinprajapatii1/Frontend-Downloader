@@ -1,0 +1,31 @@
+<svg width="100%" viewBox="0 0 680 400" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Universal Media Downloader Logo</title>
+  <desc>Dark themed logo with download arrow and media elements</desc>
+
+  <rect x="240" y="80" width="200" height="200" rx="40" fill="#0f172a" stroke="#1e3a5f" stroke-width="1.5"/>
+
+  <circle cx="340" cy="155" r="38" fill="#1e3a5f"/>
+  <circle cx="340" cy="155" r="28" fill="#3b82f6"/>
+
+  <path d="M330 142 L330 162 L322 162 L340 182 L358 162 L350 162 L350 142 Z" fill="#f0f4ff" fill-rule="evenodd"/>
+
+  <rect x="318" y="188" width="44" height="5" rx="2.5" fill="#f0f4ff" opacity="0.9"/>
+
+  <rect x="256" y="130" width="28" height="28" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <rect x="261" y="135" width="8" height="6" rx="1" fill="#63b3ed"/>
+  <rect x="261" y="144" width="18" height="2" rx="1" fill="#475569"/>
+  <rect x="261" y="148" width="14" height="2" rx="1" fill="#475569"/>
+
+  <rect x="396" y="130" width="28" height="28" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <polygon points="403,137 403,151 415,144" fill="#34d399"/>
+  <rect x="416" y="136" width="4" height="16" rx="1" fill="#34d399"/>
+
+  <circle cx="264" cy="190" r="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <path d="M260 190 L264 194 L270 186" stroke="#63b3ed" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <circle cx="416" cy="190" r="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <path d="M412 190 L416 194 L422 186" stroke="#34d399" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="340" y="318" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="22" font-weight="700" fill="#f0f4ff" letter-spacing="-0.5">Universal Media</text>
+  <text x="340" y="344" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="14" font-weight="500" fill="#63b3ed" letter-spacing="3">DOWNLOADER</text>
+</svg>
