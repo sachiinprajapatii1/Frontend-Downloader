@@ -6,7 +6,7 @@ export default function Footer() {
       <p style={{ fontSize: 13, color: "#2e3a52", marginBottom: 16 }}>
         Built with passion by <span style={{ color: "#63b3ed" }}>Sachin Prajapati</span>
       </p>
-      <div style={{ display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", marginBottom: 12 }}>
         {SOCIAL_LINKS.map((link) => (
           <a
             key={link.label}
@@ -18,8 +18,15 @@ export default function Footer() {
             onMouseLeave={(e) => (e.target.style.color = "#3a4a66")}
           >
             {link.label}
+            
           </a>
+          
         ))}
+        
+      </div>
+      <div className=" items-center space-x-6 justify-center mb-2 gap-6">
+        <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
       </div>
       <p style={{ fontSize: 11, color: "#1e2a40" }}>
         © 2026 Universal Media Downloader · Built by Sachin Prajapati · All rights reserved
