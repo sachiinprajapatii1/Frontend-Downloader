@@ -72,11 +72,11 @@ export default function CarouselSection({
         </div>
       )}
 
-      {!carouselLoading && carouselItems.length === 0 && (
+      {/* {!carouselLoading && carouselItems.length === 0 && (
         <div style={{ fontSize: 13, color: "#f87171", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: 10, padding: "12px 16px" }}>
           ⚠ Carousel & Story downloads require a dedicated server. This feature works on local version only.
         </div>
-      )}
+      )} */}
     </div>
   );
 }
