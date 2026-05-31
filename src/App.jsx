@@ -13,7 +13,7 @@ import About from "./components/About";
 import Footer from "./components/Footer";
 import CookieConsent from "./components/CookieConsent";
 import PrivacyPolicy from "./components/Privacypolicy";
-import TermsOfService from "./components/Termsofservice";
+import TermsOfService from "./components/Termsofservice"
 
 const GlowOrb = ({ style }) => (
   <div style={{ position: "fixed", borderRadius: "50%", filter: "blur(80px)", opacity: 0.15, pointerEvents: "none", zIndex: 0, ...style }} />
